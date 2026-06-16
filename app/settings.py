@@ -11,25 +11,24 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Cargar el archivo .env usando python-dotenv
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-import os
-import environ
-
-env = environ.Env()
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
-
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('KEY')
+SECRET_KEY = os.getenv('KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool('DEBUG', default=True)
+# Convierte el string del .env a booleano real de Python
+DEBUG = os.getenv('DEBUG', 'True').lower() in ('true', '1', 't')
 
 ALLOWED_HOSTS = []
 
@@ -46,8 +45,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     
-    # API apps (system moduls)
-    
+    # API apps (system modules)
+    'ubication'
 ]
 
 MIDDLEWARE = [
@@ -86,12 +85,12 @@ WSGI_APPLICATION = 'app.wsgi.application'
 
 DATABASES = {
     'default': {
-        "ENGINE": env("ENGINE"),
-        "NAME": env("NAME"),
-        "USER": env("USER"),
-        "PASSWORD": env("PASSWORD"),
-        "HOST": env("HOST"),
-        "PORT": env("PORT")
+        "ENGINE": os.getenv("ENGINE"),
+        "NAME": os.getenv("NAME"),
+        "USER": os.getenv("USER"),
+        "PASSWORD": os.getenv("PASSWORD"),
+        "HOST": os.getenv("HOST"),
+        "PORT": os.getenv("PORT")
     }
 }
 
@@ -101,9 +100,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000"
 ]
 
- 
 CORS_ALLOW_ALL_ORIGINS = True
-
 
 CORS_ALLOW_CREDENTIALS = True
 
