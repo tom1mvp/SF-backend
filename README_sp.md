@@ -12,24 +12,47 @@ Esta plataforma transforma los partidos casuales en una experiencia profesional 
 
 ### 📝 Módulos del Sistema
 - **Ubication (Ubicación):** Este módulo gestiona todas las operaciones relacionadas con localizaciones geográficas, incluyendo países, provincias y ciudades. Es la base estructural para situar los complejos deportivos.
+- **People (Personas):** Este módulo maneja todas las operaciones relacionadas con el almacenamiento, validación y recuperación de perfiles individuales, haciendo el seguimiento de identificadores clave como números de documento oficiales, géneros e información de contacto.
+
+---
 
 ### ⚙️ Endpoints del Sistema
 
-#### Módulo de Ubicación
+### Módulo de Ubicación
+
 | Método | Endpoint | Descripción | Requiere Autenticación |
 | :--- | :--- | :--- | :---: |
 | `GET` | `/ubication/country/list/` | Obtiene la lista completa de todos los países en la base de datos. | No |
-| `GET` | `/ubication/country/name/<str:name>/` | Obtiene los detalles del país que coincida con el nombre especificado en la URL. | No |
+| `GET` | `/ubication/country/name/<str:name>` | Obtiene los detalles del país que coincida con el nombre especificado en la URL. | No |
 | `GET` | `/ubication/province/list/` | Obtiene la lista completa de todas las provincias en la base de datos. | No |
-| `GET` | `/ubication/province/name/<str:name>/` | Obtiene los detalles de la provincia que coincida con el nombre especificado en la URL. | No |
-| `GET` | `/ubication/province/country/<str:country_name>/` | Obtiene todas las provincias asociadas al nombre del país especificado en la URL. | No |
+| `GET` | `/ubication/province/name/<str:name>` | Obtiene los detalles del provincia que coincida con el nombre especificado en la URL. | No |
+| `GET` | `/ubication/province/country/<str:country_name>` | Obtiene todas las provincias asociadas al nombre del país especificado en la URL. | No |
 | `GET` | `/ubication/city/list/` | Obtiene la lista completa de todas las ciudades en la base de datos. | No |
-| `GET` | `/ubication/city/name/<str:name>/` | Obtiene los detalles de la ciudad que coincida con el nombre especificado en la URL. | No |
-| `GET` | `/ubication/city/province/<str:province_name>/` | Obtiene todas las ciudades asociadas al nombre de la provincia especificado en la URL. | No |
+| `GET` | `/ubication/city/name/<str:name>` | Obtiene los detalles de la ciudad que coincida con el nombre especificado en la URL. | No |
+| `GET` | `/ubication/city/province/<str:province_name>` | Obtiene todas las ciudades asociadas al nombre de la provincia especificado en la URL. | No |
+| `GET` | `/ubication/address/list/` | Obtiene la lista completa de todas las direcciones en la base de datos. | No |
+| `GET` | `/ubication/address/street/<str:street>` | Obtiene los detalles de la dirección que coincida con la calle especificada en la URL. | No |
+| `GET` | `/ubication/address/city/<str:city_name>` | Obtiene todas las direcciones asociadas al nombre de la ciudad especificado en la URL. | No |
+| `POST` | `/ubication/address/create/` | Crea un nuevo registro de dirección asociado a una ciudad específica. | No |
+| `PUT` | `/ubication/address/update/<int:id>` | Actualiza un registro de dirección existente que coincida con el ID especificado. | No |
 
-### 📄 Especificaciones Detalladas (Módulo Ubicación)
+### Módulo de Personas
+
+| Método | Endpoint | Descripción | Requiere Autenticación |
+| :--- | :--- | :--- | :---: |
+| `GET` | `/person/document/type/list` | Obtiene la lista completa de todos los tipos de documento en la base de datos. | No |
+| `GET` | `/person/document/type/name/<str:name>` | Obtiene los detalles del tipo de documento que coincida con el nombre especificado in la URL. | No |
+| `GET` | `/person/genre/list/` | Obtiene la lista completa de todos los géneros en la base de datos. | No |
+| `GET` | `/person/genre/name/<str:name>` | Obtiene los detalles del género que coincida con el nombre especificado en la URL. | No |
+| `GET` | `/person/list/` | Obtiene la lista completa de todas las personas registradas en la base de datos. | No |
+| `GET` | `/person/name/<str:last_name>` | Obtiene todas las personas que coincidan con el apellido especificado en la URL. | No |
+| `GET` | `/person/document/<str:document_number>` | Obtiene los detalles de una persona que coincida con el número de documento especificado. | No |
+| `POST` | `/person/create/` | Registra un nuevo registro de persona con sus datos de identificación. | No |
+| `PUT` | `/person/update/<int:id>` | Actualiza un registro de persona existente que coincida con el ID especificado. | No |
 
 ---
+
+### 📄 Especificaciones Detalladas (Módulo Ubicación)
 
 #### 🗺️ Endpoints de Países (Country)
 
@@ -37,7 +60,7 @@ Esta plataforma transforma los partidos casuales en una experiencia profesional 
 * **URL:** `/ubication/country/list/`
 * **Método:** `GET`
 * **Respuesta Exitosa (200 OK):**
-    ```json
+```json
     {
         "data": [
             {
@@ -48,7 +71,7 @@ Esta plataforma transforma los partidos casuales en una experiencia profesional 
     }
     ```
 * **Respuesta de Error (404 Not Found):**
-    ```json
+```json
     {
         "error": "NotFound",
         "message": "Country not found"
@@ -56,11 +79,11 @@ Esta plataforma transforma los partidos casuales en una experiencia profesional 
     ```
 
 ##### 2. Obtener país por nombre
-* **URL:** `/ubication/country/name/<str:name>/`
+* **URL:** `/ubication/country/name/<str:name>`
 * **Método:** `GET`
 * **Parámetros de URL:** `name=[string]` (ej: `Argentina`)
 * **Respuesta Exitosa (200 OK):**
-    ```json
+```json
     {
         "data": [
             {
@@ -71,21 +94,19 @@ Esta plataforma transforma los partidos casuales en una experiencia profesional 
     }
     ```
 * **Respuesta de Error (400 Bad Request):**
-    ```json
+```json
     {
         "error": "ValidationError",
         "message": "The country name is required in the URL."
     }
     ```
 * **Respuesta de Error (404 Not Found):**
-    ```json
+```json
     {
         "error": "NotFound",
         "message": "Country not found"
     }
     ```
-
----
 
 #### 🏛️ Endpoints de Provincias (Province)
 
@@ -93,7 +114,7 @@ Esta plataforma transforma los partidos casuales en una experiencia profesional 
 * **URL:** `/ubication/province/list/`
 * **Método:** `GET`
 * **Respuesta Exitosa (200 OK):**
-    ```json
+```json
     {
         "data": [
             {
@@ -112,7 +133,7 @@ Esta plataforma transforma los partidos casuales en una experiencia profesional 
     }
     ```
 * **Respuesta de Error (404 Not Found):**
-    ```json
+```json
     {
         "error": "NotFound",
         "message": "Provinces not found"
@@ -120,11 +141,11 @@ Esta plataforma transforma los partidos casuales en una experiencia profesional 
     ```
             
 ##### 4. Obtener provincia por nombre
-* **URL:** `/ubication/province/name/<str:name>/`
+* **URL:** `/ubication/province/name/<str:name>`
 * **Método:** `GET`
 * **Parámetros de URL:** `name=[string]` (ej: `Cordoba`)
 * **Respuesta Exitosa (200 OK):**
-    ```json
+```json
     {
         "data": [
             {
@@ -137,14 +158,14 @@ Esta plataforma transforma los partidos casuales en una experiencia profesional 
     }
     ```
 * **Respuesta de Error (400 Bad Request):**
-    ```json
+```json
     {
         "error": "ValidationError",
         "message": "The province name is required in the URL."
     }
     ```
 * **Respuesta de Error (404 Not Found):**
-    ```json
+```json
     {
         "error": "NotFound",
         "message": "province not found"
@@ -152,11 +173,11 @@ Esta plataforma transforma los partidos casuales en una experiencia profesional 
     ```
          
 ##### 5. Obtener provincias por nombre de país
-* **URL:** `/ubication/province/country/<str:country_name>/`
+* **URL:** `/ubication/province/country/<str:country_name>`
 * **Método:** `GET`
 * **Parámetros de URL:** `country_name=[string]` (ej: `Argentina`)
 * **Respuesta Exitosa (200 OK):**
-    ```json
+```json
     {
         "data": [
             {
@@ -175,15 +196,13 @@ Esta plataforma transforma los partidos casuales en una experiencia profesional 
     }
     ```
 
----
-
 #### 🏙️ Endpoints de Ciudades (City)
 
 ##### 6. Obtener todas las ciudades
 * **URL:** `/ubication/city/list/`
 * **Método:** `GET`
 * **Respuesta Exitosa (200 OK):**
-    ```json
+```json
     {
         "data": [
             {
@@ -202,7 +221,7 @@ Esta plataforma transforma los partidos casuales en una experiencia profesional 
     }
     ```
 * **Respuesta de Error (404 Not Found):**
-    ```json
+```json
     {
         "error": "NotFound",
         "message": "City not found"
@@ -210,11 +229,11 @@ Esta plataforma transforma los partidos casuales en una experiencia profesional 
     ```
 
 ##### 7. Obtener ciudad por nombre
-* **URL:** `/ubication/city/name/<str:name>/`
+* **URL:** `/ubication/city/name/<str:name>`
 * **Método:** `GET`
 * **Parámetros de URL:** `name=[string]` (ej: `Cordoba`)
 * **Respuesta Exitosa (200 OK):**
-    ```json
+```json
     {
         "data": [
             {
@@ -227,14 +246,14 @@ Esta plataforma transforma los partidos casuales en una experiencia profesional 
     }
     ```
 * **Respuesta de Error (400 Bad Request):**
-    ```json
+```json
     {
         "error": "ValidationError",
         "message": "The city name is required in the URL."
     }
     ```
 * **Respuesta de Error (404 Not Found):**
-    ```json
+```json
     {
         "error": "NotFound",
         "message": "City not found"
@@ -242,11 +261,11 @@ Esta plataforma transforma los partidos casuales en una experiencia profesional 
     ```
 
 ##### 8. Obtener ciudades por nombre de provincia
-* **URL:** `/ubication/city/province/<str:province_name>/`
+* **URL:** `/ubication/city/province/<str:province_name>`
 * **Método:** `GET`
 * **Parámetros de URL:** `province_name=[string]` (ej: `Cordoba`)
 * **Respuesta Exitosa (200 OK):**
-    ```json
+```json
     {
         "data": [
             {
@@ -265,17 +284,341 @@ Esta plataforma transforma los partidos casuales en una experiencia profesional 
     }
     ```
 * **Respuesta de Error (400 Bad Request):**
-    ```json
+```json
     {
         "error": "ValidationError",
         "message": "The province name is required in the URL."
     }
     ```
 * **Respuesta de Error (404 Not Found):**
-    ```json
+```json
     {
         "error": "NotFound",
         "message": "Province not found"
+    }
+    ```
+
+##### 9. Obtener direcciones por nombre de ciudad
+* **URL:** `/ubication/address/city/<str:city_name>`
+* **Método:** `GET`
+* **Parámetros de URL:** `city_name=[string]` (ej: `Río Cuarto`)
+* **Respuesta Exitosa (200 OK):**
+```json
+    {
+        "data": [
+            {
+                "id": 1,
+                "street_main": "Lorem ipsum",
+                "street_complement": "Lorem ipsum ipsum",
+                "street_number": "1880",
+                "apartment_number": "",
+                "floor": "",
+                "comment": "Casa principal",
+                "is_apartment": false,
+                "city_id": 2687,
+                "city_name": "Río Cuarto"
+            },
+            {
+                "id": 2,
+                "street_main": "Lorem ipsum",
+                "street_complement": "Lorem ipsum",
+                "street_number": "0000",
+                "apartment_number": "8",
+                "floor": "4",
+                "comment": "Departamento principal",
+                "is_apartment": true,
+                "city_id": 2687,
+                "city_name": "Río Cuarto"
+            }
+        ]
+    }
+    ```
+* **Respuesta de Error (400 Bad Request):**
+```json
+    {
+        "error": "ValidationError",
+        "message": "The city name is required in the URL."
+    }
+    ```
+* **Respuesta de Error (404 Not Found):**
+```json
+    {
+        "error": "NotFound",
+        "message": "City not found"
+    }
+    ```
+
+##### 10. Crear una dirección
+* **URL:** `/ubication/address/create/`
+* **Método:** `POST`
+* **Encabezados (Headers):** `Content-Type: application/json`
+* **Cuerpo de la Petición (JSON Request Body):**
+```json
+    {
+        "street_main": "Montevideo",
+        "street_complement": "Matias Nolasco",
+        "street_number": "1759",
+        "apartment_number": "",
+        "floor": "",
+        "comment": "Casa principal",
+        "is_apartment": false,
+        "city_id": 2687
+    }
+    ```
+* **Respuesta Exitosa (201 Created):**
+```json
+    {
+        "Message": "The address has been successfully created",
+        "data": {
+            "id": 1,
+            "street_main": "Montevideo",
+            "street_complement": "Matias Nolasco",
+            "street_number": "1759",
+            "apartment_number": "",
+            "floor": "",
+            "comment": "Casa principal",
+            "is_apartment": false,
+            "city_id": 2687,
+            "city_name": "Río Cuarto"
+        }
+    }
+    ```
+* **Respuesta de Error (400 Bad Request):**
+```json
+    {
+        "Error": "Sensitive data is missing"
+    }
+    ```
+
+##### 11. Actualizar una dirección
+* **URL:** `/ubication/address/update/<int:id>`
+* **Método:** `PUT`
+* **Parámetros de URL:** `id=[integer]` (ej: `2`)
+* **Encabezados (Headers):** `Content-Type: application/json`
+* **Cuerpo de la Petición (JSON Request Body):**
+```json
+    {
+        "street_main": "San Martin",
+        "street_complement": "Buenos Aires",
+        "street_number": "1444",
+        "apartment_number": "8",
+        "floor": "4",
+        "comment": "Departamento en calle San Martin",
+        "is_apartment": true,
+        "city_id": 2687
+    }
+    ```
+* **Respuesta Exitosa (200 OK):**
+```json
+    {
+        "Message": "The address has been successfully updated",
+        "data": {
+            "id": 2,
+            "street_main": "San Martin",
+            "street_complement": "Buenos Aires",
+            "street_number": "1444",
+            "apartment_number": "8",
+            "floor": "4",
+            "comment": "Departamento en calle San Martin",
+            "is_apartment": true,
+            "city_id": 2687,
+            "city_name": "Río Cuarto"
+        }
+    }
+    ```
+* **Respuesta de Error (400 Bad Request):**
+```json
+    {
+        "Error": "Sensitive data is missing"
+    }
+    ```
+* **Respuesta de Error (404 Not Found):**
+```json
+    {
+        "Error": "Address not found"
+    }
+    ```
+
+---
+
+### 📄 Especificaciones Detalladas (Módulo Personas)
+
+#### 👤 Endpoints de Géneros e Identificación
+
+##### 12. Obtener tipo de documento por nombre
+* **URL:** `/person/document/type/name/<str:name>`
+* **Método:** `GET`
+* **Parámetros de URL:** `name=[string]` (ej: `DNI`)
+* **Respuesta Exitosa (200 OK):**
+```json
+    {
+        "data": [
+            {
+                "id": 2,
+                "name": "DNI"
+            }
+        ]
+    }
+    ```
+* **Respuesta de Error (400 Bad Request):**
+```json
+    {
+        "error": "ValidationError",
+        "message": "The document type name is required in the URL."
+    }
+    ```
+* **Respuesta de Error (404 Not Found):**
+```json
+    {
+        "error": "NotFound",
+        "message": "Document type not found"
+    }
+    ```
+
+##### 13. Obtener todas las personas
+* **URL:** `/person/list/`
+* **Método:** `GET`
+* **Respuesta Exitosa (200 OK):**
+```json
+    {
+        "data": [
+            {
+                "id": 1,
+                "first_name": "John",
+                "last_name": "Doe",
+                "document_number": "12345678",
+                "birth_date": "1995-05-20",
+                "phone": "5551234567",
+                "email": "johndoe@example.com",
+                "document_type_id": 1,
+                "genre_id": 1,
+                "address_id": 1
+            }
+        ]
+    }
+    ```
+
+##### 14. Obtener personas por apellido
+* **URL:** `/person/name/<str:last_name>`
+* **Método:** `GET`
+* **Parámetros de URL:** `last_name=[string]` (ej: `Doe`)
+* **Respuesta Exitosa (200 OK):**
+```json
+    {
+        "data": [
+            {
+                "id": 1,
+                "first_name": "John",
+                "last_name": "Doe",
+                "document_number": "12345678",
+                "birth_date": "1995-05-20",
+                "phone": "5551234567",
+                "email": "johndoe@example.com",
+                "document_type_id": 1,
+                "genre_id": 1,
+                "address_id": 1
+            }
+        ]
+    }
+    ```
+* **Respuesta de Error (404 Not Found):**
+```json
+    {
+        "error": "NotFound",
+        "message": "No people found with the specified last name"
+    }
+    ```
+
+##### 15. Crear una persona
+* **URL:** `/person/create/`
+* **Método:** `POST`
+* **Encabezados (Headers):** `Content-Type: application/json`
+* **Cuerpo de la Petición (JSON Request Body):**
+```json
+    {
+        "first_name": "Jane",
+        "last_name": "Smith",
+        "document_number": "87654321",
+        "birth_date": "1992-10-10",
+        "phone": "5559876543",
+        "email": "janesmith@example.com",
+        "document_type_id": 1,
+        "genre_id": 2,
+        "address_id": 2
+    }
+    ```
+* **Respuesta Exitosa (201 Created):**
+```json
+    {
+        "Message": "The person has been successfully created",
+        "data": {
+            "id": 2,
+            "first_name": "Jane",
+            "last_name": "Smith",
+            "document_number": "87654321",
+            "birth_date": "1992-10-10",
+            "phone": "5559876543",
+            "email": "janesmith@example.com",
+            "document_type_id": 1,
+            "genre_id": 2,
+            "address_id": 2
+        }
+    }
+    ```
+* **Respuesta de Error (400 Bad Request):**
+```json
+    {
+        "Error": "Sensitive data is missing"
+    }
+    ```
+
+##### 16. Actualizar una persona
+* **URL:** `/person/update/<int:id>`
+* **Método:** `PUT`
+* **Parámetros de URL:** `id=[integer]` (ej: `2`)
+* **Encabezados (Headers):** `Content-Type: application/json`
+* **Cuerpo de la Petición (JSON Request Body):**
+```json
+    {
+        "first_name": "Jane",
+        "last_name": "Smith",
+        "document_number": "87654321",
+        "birth_date": "1992-10-10",
+        "phone": "5550001111",
+        "email": "jane.updated@example.com",
+        "document_type_id": 1,
+        "genre_id": 2,
+        "address_id": 2
+    }
+    ```
+* **Respuesta Exitosa (200 OK):**
+```json
+    {
+        "Message": "The person has been successfully updated",
+        "data": {
+            "id": 2,
+            "first_name": "Jane",
+            "last_name": "Smith",
+            "document_number": "87654321",
+            "birth_date": "1992-10-10",
+            "phone": "5550001111",
+            "email": "jane.updated@example.com",
+            "document_type_id": 1,
+            "genre_id": 2,
+            "address_id": 2
+        }
+    }
+    ```
+* **Respuesta de Error (400 Bad Request):**
+```json
+    {
+        "Error": "Sensitive data is missing"
+    }
+    ```
+* **Respuesta de Error (404 Not Found):**
+```json
+    {
+        "Error": "Person not found"
     }
     ```
 

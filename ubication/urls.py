@@ -9,7 +9,12 @@ from ubication.views import (
     ProvinceByCountryNameView,
     ListCityView,
     CityByNameView,
-    CityByProvinceNameView
+    CityByProvinceNameView,
+    ListAddressesView,
+    AddressByStreetView,
+    AddressByCityNameView,
+    CreateAddressView,
+    UpdateAddressView
 )
 
 
@@ -60,5 +65,32 @@ urlpatterns = [
         'city/province/<str:province_name>',
         CityByProvinceNameView.as_view(),
         name='city-province-name'
+    ),
+    
+    path(
+        'address/list/',
+        ListAddressesView.as_view(),
+        name='addresses-list'
+    ),
+    path(
+        'address/street/<str:street>',
+        AddressByStreetView.as_view(),
+        name='address-by-street'
+    ),
+    path(
+        'address/city/<str:city_name>',
+        AddressByCityNameView.as_view(),
+        name='street-by-city'
+    ),
+    path(
+        'address/create/',
+        CreateAddressView.as_view(),
+        name='create-address'
+    ),
+    
+    path(
+        'address/update/<int:id>',
+        UpdateAddressView.as_view(),
+        name='update-address'
     )
 ]

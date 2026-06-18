@@ -3,7 +3,8 @@ from rest_framework import serializers
 from ubication.models import (
     Country,
     Province,
-    City
+    City,
+    Address
 )
 
 class CountryListSerializer(serializers.ModelSerializer):
@@ -60,3 +61,28 @@ class CityListSerializer(serializers.ModelSerializer):
 
     def get_country_name(self, obj):
         return obj.province.country.name
+
+class AddressListSerializer(serializers.ModelSerializer):
+    city_id = serializers.SerializerMethodField()
+    city_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model=Address
+        fields = [
+            'id',
+            'street_main',
+            'street_complement',
+            'street_number',
+            'apartment_number',
+            'floor',
+            'comment',
+            'is_apartment',
+            'city_id',
+            'city_name'
+        ]
+        
+    def get_city_id(self, obj):
+        return obj.city.id
+
+    def get_city_name(self, obj):
+        return obj.city.name
