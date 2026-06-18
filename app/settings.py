@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'corsheaders',
     
     # API apps (system modules)
-    'ubication'
+    'ubication',
+    'people'
 ]
 
 MIDDLEWARE = [

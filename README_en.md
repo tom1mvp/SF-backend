@@ -11,7 +11,8 @@ Beyond standard field booking, this project delivers a **dynamic ecosystem** tha
 This platform transforms casual matches into a professional, seamless experience for friends competing in dynamic cups and knockout tournaments.
 
 ### 📝 Modules
-- **Ubication**: This module handles all operations related to geographic locations, including countries, provinces, and cities.
+- **Ubication**: This module handles all operations related to geographic locations, including address, countries, provinces, and cities.
+- **People**: This module handles all operations related to managing personal identity records, including full names, contact info, and demographic details.
     
 ### ⚙️ Endpoints
 * **Ubication Module**:
@@ -25,7 +26,25 @@ This platform transforms casual matches into a professional, seamless experience
     | `GET` | `/ubication/city/list/` | Retrieves a complete list of all cities in the database. | No |
     | `GET` | `/ubication/city/name/<str:name>/` | Retrieves the city details that match the name specified in the URL. | No |
     | `GET` | `/ubication/city/province/<str:province_name>/` | Retrieves all cities associated with the province name specified in the URL. | No |
+    | `GET` | `/ubication/address/list/` | Retrieves a complete list of all adresses in the database | No |
+    | `GET` | `/ubication/address/street/<str:street>` | Retrives the address details that match the street specified in the URL. | No |
+    | `GET` | `/ubication/address/city/<str:city_name>` | Retrives all adresses associated with the city name specified in the URL. | No |
+    | `POST`| `/ubication/address/create/` | Creates a new address record associated with a specific city. | No |
+    | `PUT`| `/ubication/address/update/<int:id>` | Updates an existing address record matching the specified ID. | No |
     
+* **People Module**:
+    | Method | Endpoint | Description | Auth Required |
+    | :--- | :--- | :--- | :---: |
+    | `GET` | `/person/document/type/list` | Retrieves a complete list of all document types in the database. | No |
+    | `GET` | `/person/document/type/name/<str:name>` | Retrieves the document type details that match the name specified in the URL. | No |
+    | `GET` | `/person/genre/list/` | Retrieves a complete list of all genres in the database. | No |
+    | `GET` | `/person/genre/name/<str:name>` | Retrieves the genre details that match the name specified in the URL. | No |
+    | `GET` | `/person/list/` | Retrieves a complete list of all registered people in the database. | No |
+    | `GET` | `/person/name/<str:last_name>` | Retrieves all people matching the last name specified in the URL. | No |
+    | `GET` | `/person/document/<str:document_number>` | Retrieves the details of a person matching the specified document number. | No |
+    | `POST` | `/person/create/` | Registers a new person record with their identification data. | No |
+    | `PUT` | `/person/update/<int:id>` | Updates an existing person record matching the specified ID. | No |
+
 ### 📄 Detailed Specifications
 
 ---
@@ -281,6 +300,518 @@ This platform transforms casual matches into a professional, seamless experience
     {
         "error": "NotFound",
         "message": "Province not found"
+    }
+    ```
+
+---
+
+#### 🏠 Address Endpoints
+
+##### 9. Get all adresses
+* **URL:** `/ubication/address/list/`
+* **Method:** `GET`
+* **Success Response (200 OK):**
+    ```json
+    {
+        "data": [
+            {
+                "id": 1,
+                "street_main": "Lorem ipsum",
+                "street_complement": "Lorem ipsum ipsum",
+                "street_number": "1880",
+                "apartment_number": "",
+                "floor": "",
+                "comment": "Main home",
+                "is_apartment": false,
+                "city_id": 2687,
+                "city_name": "Río Cuarto"
+            },
+            {
+                "id": 2,
+                "street_main": "Lorem ipsum",
+                "street_complement": "Lorem ipsum",
+                "street_number": "0000",
+                "apartment_number": "8",
+                "floor": "4",
+                "comment": "Main Home",
+                "is_apartment": true,
+                "city_id": 2687,
+                "city_name": "Río Cuarto"
+            }
+        ]
+    }
+    ```
+* **Error Response (404 Not Found):**
+    ```json
+    {
+        "error": "NotFound",
+        "message": "Address not found"
+    }
+    ```
+
+#### 10. Get address by street
+* **URL:** `/ubication/address/street/<str:street>`
+* **Method:** `GET`
+* **URL Params:** `street=[string]` (e.g., `Lorem ipsum`)
+* **Success Response (200 OK):**
+    ```json
+    {
+        "data": [
+            {
+                "id": 1,
+                "street_main": "Lorem ipsum",
+                "street_complement": "Lorem ipsum ipsum",
+                "street_number": "1880",
+                "apartment_number": "",
+                "floor": "",
+                "comment": "Main home",
+                "is_apartment": false,
+                "city_id": 2687,
+                "city_name": "Río Cuarto"
+            },
+            {
+                "id": 2,
+                "street_main": "Lorem ipsum",
+                "street_complement": "Lorem ipsum",
+                "street_number": "0000",
+                "apartment_number": "8",
+                "floor": "4",
+                "comment": "Main Home",
+                "is_apartment": true,
+                "city_id": 2687,
+                "city_name": "Río Cuarto"
+            }
+        ]
+    }
+    ```
+* **Error Response (400 Bad Request):**
+    ```json
+    {
+        "error": "ValidationError",
+        "message": "The street name is required in the URL."
+    }
+    ```
+* **Error Response (404 Not Found):**
+    ```json
+    {
+        "error": "NotFound",
+        "message": "Street not found"
+    }
+    ```
+
+#### 11. Get address by city
+* **URL:** `/ubication/address/city/<str:city_name>`
+* **Method:** `GET`
+* **URL Params:** `city_name=[string]` (e.g., `Río Cuarto`)
+* **Success Response (200 OK):**
+    ```json
+    {
+        "data": [
+            {
+                "id": 1,
+                "street_main": "Lorem ipsum",
+                "street_complement": "Lorem ipsum ipsum",
+                "street_number": "1880",
+                "apartment_number": "",
+                "floor": "",
+                "comment": "Main home",
+                "is_apartment": false,
+                "city_id": 2687,
+                "city_name": "Río Cuarto"
+            },
+            {
+                "id": 2,
+                "street_main": "Lorem ipsum",
+                "street_complement": "Lorem ipsum",
+                "street_number": "0000",
+                "apartment_number": "8",
+                "floor": "4",
+                "comment": "Main Home",
+                "is_apartment": true,
+                "city_id": 2687,
+                "city_name": "Río Cuarto"
+            }
+        ]
+    }
+    ```
+* **Error Response (400 Bad Request):**
+    ```json
+    {
+        "error": "ValidationError",
+        "message": "The city name is required in the URL."
+    }
+    ```
+* **Error Response (404 Not Found):**
+    ```json
+    {
+        "error": "NotFound",
+        "message": "City not found"
+    }
+    ```
+
+#### 12. Create an address
+* **URL:** `/ubication/address/create`
+* **Method:** `POST`
+* **Headers:** `Content-Type: application/json`
+* **Request Body (JSON):**
+    ```json
+    {
+        "street_main": "Lorem",
+        "street_complement": "Ipsum",
+        "street_number": "0000",
+        "apartment_number": "",
+        "floor": "",
+        "comment": "Main Home",
+        "is_apartment": false,
+        "city_id": 2687
+    }
+    ```
+* **Success Response (201 Created):**
+    ```json
+    {
+        "Message": "The address has been successfully created",
+        "data": {
+            "id": 1,
+            "street_main": "Lorem",
+            "street_complement": "Ipsum",
+            "street_number": "0000",
+            "apartment_number": "",
+            "floor": "",
+            "comment": "Main Home",
+            "is_apartment": false,
+            "city_id": 2687,
+            "city_name": "Río Cuarto"
+        }
+    }
+    ```
+* **Error Response (400 Bad Request):**
+    ```json
+    {
+        "Error": "Sensitive data is missing"
+    }
+    ```
+
+#### 13. Update an address
+* **URL:** `/ubication/address/update/<int:id>`
+* **Method:** `PUT`
+* **URL Params:** `id=[integer]` (e.g., `2`)
+* **Headers:** `Content-Type: application/json`
+* **Request Body (JSON):**
+    ```json
+    {
+        "street_main": "Lore Lore",
+        "street_complement": "Ipsum",
+        "street_number": "9000",
+        "apartment_number": "1",
+        "floor": "2",
+        "comment": "Main Home",
+        "is_apartment": true,
+        "city_id": 2687
+    }
+    ```
+* **Success Response (200 OK):**
+    ```json
+    {
+        "Message": "The address has been successfully updated",
+        "data": {
+            "id": 2,
+            "street_main": "Lore lore",
+            "street_complement": "Ipsum",
+            "street_number": "9000",
+            "apartment_number": "1",
+            "floor": "2",
+            "comment": "Main Home",
+            "is_apartment": true,
+            "city_id": 2687,
+            "city_name": "Río Cuarto"
+        }
+    }
+    ```
+* **Error Response (400 Bad Request):**
+    ```json
+    {
+        "Error": "Sensitive data is missing"
+    }
+    ```
+* **Error Response (404 Not Found):**
+    ```json
+    {
+        "Error": "Address not found"
+    }
+    ```
+
+---
+
+### 👤 People Endpoints
+
+##### 14. Get all genres
+* **URL:** `/person/genre/list/`
+* **Method:** `GET`
+* **Success Response (200 OK):**
+    ```json
+    {
+        "data": [
+            {
+                "id": 1,
+                "name": "Male"
+            },
+            {
+                "id": 2,
+                "name": "Female"
+            },
+            {
+                "id": 3,
+                "name": "Other"
+            }
+        ]
+    }
+    ```
+* **Error Response (404 Not Found):**
+    ```json
+    {
+        "error": "NotFound",
+        "message": "Genres not found"
+    }
+    ```
+
+#### 15. Get genre by name
+* **URL:** `/person/genre/name/<str:name>`
+* **Method:** `GET`
+* **URL Params:** `name=[string]` (e.g., `Female`)
+* **Success Response (200 OK):**
+    ```json
+    {
+        "data": [
+            {
+                "id": 2,
+                "name": "Female"
+            }
+        ]
+    }
+    ```
+* **Error Response (400 Bad Request):**
+    ```json
+    {
+        "error": "ValidationError",
+        "message": "The genre name is required in the URL."
+    }
+    ```
+* **Error Response (404 Not Found):**
+    ```json
+    {
+        "error": "NotFound",
+        "message": "Genre not found"
+    }
+    ```
+
+##### 16. Get all document type
+* **URL:** `/person/document/type/list/`
+* **Method:** `GET`
+* **Success Response (200 OK):**
+    ```json
+    {
+        "data": [
+            {
+                "id": 1,
+                "name": "DNI"
+            },
+            {
+                "id": 2,
+                "name": "Passaport"
+            },
+            {
+                "id": 3,
+                "name": "CUIT"
+            },
+            {
+                "id": 4,
+                "name": "CUIL"
+            }
+        ]
+    }
+    ```
+* **Error Response (404 Not Found):**
+    ```json
+    {
+        "error": "NotFound",
+        "message": "Document Types not found"
+    }
+    ```
+
+#### 17. Get document type by name
+* **URL:** `/person/document/type/name/<str:name>`
+* **Method:** `GET`
+* **URL Params:** `name=[string]` (e.g., `Female`)
+* **Success Response (200 OK):**
+    ```json
+    {
+        "data": [
+            {
+                "id": 2,
+                "name": "Female"
+            }
+        ]
+    }
+    ```
+* **Error Response (400 Bad Request):**
+    ```json
+    {
+        "error": "ValidationError",
+        "message": "The genre name is required in the URL."
+    }
+    ```
+* **Error Response (404 Not Found):**
+    ```json
+    {
+        "error": "NotFound",
+        "message": "Genre not found"
+    }
+    ```
+
+#### 18. Get all people
+* **URL:** `/person/list/`
+* **Method:** `GET`
+* **Success Response (200 OK):**
+    ```json
+    {
+        "data": [
+            {
+                "id": 1,
+                "first_name": "John",
+                "last_name": "Doe",
+                "document_number": "12345678",
+                "birth_date": "1995-05-20",
+                "phone": "5551234567",
+                "email": "johndoe@example.com",
+                "document_type_id": 1,
+                "genre_id": 1,
+                "address_id": 1
+            }
+        ]
+    }
+    ```
+
+#### 19. Get people by last name
+* **URL:** `/person/name/<str:last_name>`
+* **Method:** `GET`
+* **URL Params:** `last_name=[string]` (e.g., `Doe`)
+* **Success Response (200 OK):**
+    ```json
+    {
+        "data": [
+            {
+                "id": 1,
+                "first_name": "John",
+                "last_name": "Doe",
+                "document_number": "12345678",
+                "birth_date": "1995-05-20",
+                "phone": "5551234567",
+                "email": "johndoe@example.com",
+                "document_type_id": 1,
+                "genre_id": 1,
+                "address_id": 1
+            }
+        ]
+    }
+    ```
+* **Error Response (404 Not Found):**
+    ```json
+    {
+        "error": "NotFound",
+        "message": "No people found with the specified last name"
+    }
+    ```
+
+#### 20. Create a person
+* **URL:** `/person/create/`
+* **Method:** `POST`
+* **Headers:** `Content-Type: application/json`
+* **Request Body (JSON):**
+    ```json
+    {
+        "first_name": "Jane",
+        "last_name": "Smith",
+        "document_number": "87654321",
+        "birth_date": "1992-10-10",
+        "phone": "5559876543",
+        "email": "janesmith@example.com",
+        "document_type_id": 1,
+        "genre_id": 2,
+        "address_id": 2
+    }
+    ```
+* **Success Response (201 Created):**
+    ```json
+    {
+        "Message": "The person has been successfully created",
+        "data": {
+            "id": 2,
+            "first_name": "Jane",
+            "last_name": "Smith",
+            "document_number": "87654321",
+            "birth_date": "1992-10-10",
+            "phone": "5559876543",
+            "email": "janesmith@example.com",
+            "document_type_id": 1,
+            "genre_id": 2,
+            "address_id": 2
+        }
+    }
+    ```
+* **Error Response (400 Bad Request):**
+    ```json
+    {
+        "Error": "Sensitive data is missing"
+    }
+    ```
+
+#### 21. Update a person
+* **URL:** `/person/update/<int:id>`
+* **Method:** `PUT`
+* **URL Params:** `id=[integer]` (e.g., `2`)
+* **Headers:** `Content-Type: application/json`
+* **Request Body (JSON):**
+    ```json
+    {
+        "first_name": "Jane",
+        "last_name": "Smith",
+        "document_number": "87654321",
+        "birth_date": "1992-10-10",
+        "phone": "5550001111",
+        "email": "jane.updated@example.com",
+        "document_type_id": 1,
+        "genre_id": 2,
+        "address_id": 2
+    }
+    ```
+* **Success Response (200 OK):**
+    ```json
+    {
+        "Message": "The person has been successfully updated",
+        "data": {
+            "id": 2,
+            "first_name": "Jane",
+            "last_name": "Smith",
+            "document_number": "87654321",
+            "birth_date": "1992-10-10",
+            "phone": "5550001111",
+            "email": "jane.updated@example.com",
+            "document_type_id": 1,
+            "genre_id": 2,
+            "address_id": 2
+        }
+    }
+    ```
+* **Error Response (400 Bad Request):**
+    ```json
+    {
+        "Error": "Sensitive data is missing"
+    }
+    ```
+* **Error Response (404 Not Found):**
+    ```json
+    {
+        "Error": "Person not found"
     }
     ```
 
