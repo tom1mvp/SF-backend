@@ -13,6 +13,7 @@ This platform transforms casual matches into a professional, seamless experience
 ### 📝 Modules
 - **Ubication**: This module handles all operations related to geographic locations, including address, countries, provinces, and cities.
 - **People**: This module handles all operations related to managing personal identity records, including full names, contact info, and demographic details.
+- **Users**: This module manages authentication, user accounts, authorization levels (JWT Tokens), and independent email verification/reactivation workflows.
     
 ### ⚙️ Endpoints
 * **Ubication Module**:
@@ -27,23 +28,38 @@ This platform transforms casual matches into a professional, seamless experience
     | `GET` | `/ubication/city/name/<str:name>/` | Retrieves the city details that match the name specified in the URL. | No |
     | `GET` | `/ubication/city/province/<str:province_name>/` | Retrieves all cities associated with the province name specified in the URL. | No |
     | `GET` | `/ubication/address/list/` | Retrieves a complete list of all adresses in the database | No |
-    | `GET` | `/ubication/address/street/<str:street>` | Retrives the address details that match the street specified in the URL. | No |
-    | `GET` | `/ubication/address/city/<str:city_name>` | Retrives all adresses associated with the city name specified in the URL. | No |
+    | `GET` | `/ubication/address/street/<str:street>/` | Retrives the address details that match the street specified in the URL. | No |
+    | `GET` | `/ubication/address/city/<str:city_name>/` | Retrives all adresses associated with the city name specified in the URL. | No |
     | `POST`| `/ubication/address/create/` | Creates a new address record associated with a specific city. | No |
-    | `PUT`| `/ubication/address/update/<int:id>` | Updates an existing address record matching the specified ID. | No |
+    | `PUT`| `/ubication/address/update/<int:id>/` | Updates an existing address record matching the specified ID. | No |
     
 * **People Module**:
     | Method | Endpoint | Description | Auth Required |
     | :--- | :--- | :--- | :---: |
-    | `GET` | `/person/document/type/list` | Retrieves a complete list of all document types in the database. | No |
-    | `GET` | `/person/document/type/name/<str:name>` | Retrieves the document type details that match the name specified in the URL. | No |
+    | `GET` | `/person/document/type/list/` | Retrieves a complete list of all document types in the database. | No |
+    | `GET` | `/person/document/type/name/<str:name>/` | Retrieves the document type details that match the name specified in the URL. | No |
     | `GET` | `/person/genre/list/` | Retrieves a complete list of all genres in the database. | No |
-    | `GET` | `/person/genre/name/<str:name>` | Retrieves the genre details that match the name specified in the URL. | No |
+    | `GET` | `/person/genre/name/<str:name>/` | Retrieves the genre details that match the name specified in the URL. | No |
     | `GET` | `/person/list/` | Retrieves a complete list of all registered people in the database. | No |
-    | `GET` | `/person/name/<str:last_name>` | Retrieves all people matching the last name specified in the URL. | No |
-    | `GET` | `/person/document/<str:document_number>` | Retrieves the details of a person matching the specified document number. | No |
+    | `GET` | `/person/name/<str:last_name>/` | Retrieves all people matching the last name specified in the URL. | No |
+    | `GET` | `/person/document/<str:document_number>/` | Retrieves the details of a person matching the specified document number. | No |
     | `POST` | `/person/create/` | Registers a new person record with their identification data. | No |
-    | `PUT` | `/person/update/<int:id>` | Updates an existing person record matching the specified ID. | No |
+    | `PUT` | `/person/update/<int:id>/` | Updates an existing person record matching the specified ID. | No |
+
+* **Users Module**:
+    | Method | Endpoint | Description | Auth Required |
+    | :--- | :--- | :--- | :---: |
+    | `GET` | `/user/list/` | Retrieves a list of all system users. | Yes (Admin) |
+    | `GET` | `/username/<str:username>/` | Retrieves user account detailed information by username. | No |
+    | `GET` | `/email/<str:email>/` | Retrieves user account detailed information by email. | No |
+    | `POST` | `/login/` | Authenticates user credentials and returns a secure access token. | No |
+    | `POST` | `/register/` | Registers a new user account linked to role and personal information. | No |
+    | `PUT` | `/update/<int:id>/` | Modifies an existing user's data matching the specified ID. | No |
+    | `PATCH` | `/delete/<int:id>/` | Performs a logical deactivation of a user profile. | No |
+    | `PATCH` | `/recover/<str:email>/` | Re-enables a previously deactivated account logically. | No |
+    | `PATCH` | `/recover/password/<int:id>/` | Resets and updates the account password for the given user ID. | No |
+    | `POST` | `/email/reset/password/<str:username>/<str:email>/` | Triggers a secure, automated link to recover password using a unique token. | No |
+    | `POST` | `/email/reactivation/user/<str:username>/<str:email>/` | Triggers a secure email containing an activation link to reactivate a user account. | No |
 
 ### 📄 Detailed Specifications
 
@@ -55,7 +71,7 @@ This platform transforms casual matches into a professional, seamless experience
 * **URL:** `/ubication/country/list/`
 * **Method:** `GET`
 * **Success Response (200 OK):**
-    ```json
+```json
     {
         "data": [
             {
@@ -66,7 +82,7 @@ This platform transforms casual matches into a professional, seamless experience
     }
     ```
 * **Error Response (404 Not Found):**
-    ```json
+```json
     {
         "error": "NotFound",
         "message": "Country not found"
@@ -78,7 +94,7 @@ This platform transforms casual matches into a professional, seamless experience
 * **Method:** `GET`
 * **URL Params:** `name=[string]` (e.g., `Argentina`)
 * **Success Response (200 OK):**
-    ```json
+```json
     {
         "data": [
             {
@@ -89,14 +105,14 @@ This platform transforms casual matches into a professional, seamless experience
     }
     ```
 * **Error Response (400 Bad Request):**
-    ```json
+```json
     {
         "error": "ValidationError",
         "message": "The country name is required in the URL."
     }
     ```
 * **Error Response (404 Not Found):**
-    ```json
+```json
     {
         "error": "NotFound",
         "message": "Country not found"
@@ -111,7 +127,7 @@ This platform transforms casual matches into a professional, seamless experience
 * **URL:** `/ubication/province/list/`
 * **Method:** `GET`
 * **Success Response (200 OK):**
-    ```json
+```json
     {
         "data": [
             {
@@ -136,7 +152,7 @@ This platform transforms casual matches into a professional, seamless experience
     }
     ```
 * **Error Response (404 Not Found):**
-    ```json
+```json
     {
         "error": "NotFound",
         "message": "Provinces not found"
@@ -148,7 +164,7 @@ This platform transforms casual matches into a professional, seamless experience
 * **Method:** `GET`
 * **URL Params:** `name=[string]` (e.g., `Cordoba`)
 * **Success Response (200 OK):**
-    ```json
+```json
     {
         "data": [
             {
@@ -161,14 +177,14 @@ This platform transforms casual matches into a professional, seamless experience
     }
     ```
 * **Error Response (400 Bad Request):**
-    ```json
+```json
     {
         "error": "ValidationError",
         "message": "The province name is required in the URL."
     }
     ```
 * **Error Response (404 Not Found):**
-    ```json
+```json
     {
         "error": "NotFound",
         "message": "province not found"
@@ -180,7 +196,7 @@ This platform transforms casual matches into a professional, seamless experience
 * **Method:** `GET`
 * **URL Params:** `country_name=[string]` (e.g., `Argentina`)
 * **Success Response (200 OK):**
-    ```json
+```json
     {
         "data": [
             {
@@ -207,7 +223,7 @@ This platform transforms casual matches into a professional, seamless experience
 * **URL:** `/ubication/city/list/`
 * **Method:** `GET`
 * **Success Response (200 OK):**
-    ```json
+```json
     {
         "data": [
             {
@@ -226,7 +242,7 @@ This platform transforms casual matches into a professional, seamless experience
     }
     ```
 * **Error Response (404 Not Found):**
-    ```json
+```json
     {
         "error": "NotFound",
         "message": "City not found"
@@ -238,7 +254,7 @@ This platform transforms casual matches into a professional, seamless experience
 * **Method:** `GET`
 * **URL Params:** `name=[string]` (e.g., `Cordoba`)
 * **Success Response (200 OK):**
-    ```json
+```json
     {
         "data": [
             {
@@ -251,14 +267,14 @@ This platform transforms casual matches into a professional, seamless experience
     }
     ```
 * **Error Response (400 Bad Request):**
-    ```json
+```json
     {
         "error": "ValidationError",
         "message": "The city name is required in the URL."
     }
     ```
 * **Error Response (404 Not Found):**
-    ```json
+```json
     {
         "error": "NotFound",
         "message": "City not found"
@@ -270,7 +286,7 @@ This platform transforms casual matches into a professional, seamless experience
 * **Method:** `GET`
 * **URL Params:** `province_name=[string]` (e.g., `Cordoba`)
 * **Success Response (200 OK):**
-    ```json
+```json
     {
         "data": [
             {
@@ -289,14 +305,14 @@ This platform transforms casual matches into a professional, seamless experience
     }
     ```
 * **Error Response (400 Bad Request):**
-    ```json
+```json
     {
         "error": "ValidationError",
         "message": "The province name is required in the URL."
     }
     ```
 * **Error Response (404 Not Found):**
-    ```json
+```json
     {
         "error": "NotFound",
         "message": "Province not found"
@@ -311,7 +327,7 @@ This platform transforms casual matches into a professional, seamless experience
 * **URL:** `/ubication/address/list/`
 * **Method:** `GET`
 * **Success Response (200 OK):**
-    ```json
+```json
     {
         "data": [
             {
@@ -342,7 +358,7 @@ This platform transforms casual matches into a professional, seamless experience
     }
     ```
 * **Error Response (404 Not Found):**
-    ```json
+```json
     {
         "error": "NotFound",
         "message": "Address not found"
@@ -350,11 +366,11 @@ This platform transforms casual matches into a professional, seamless experience
     ```
 
 #### 10. Get address by street
-* **URL:** `/ubication/address/street/<str:street>`
+* **URL:** `/ubication/address/street/<str:street>/`
 * **Method:** `GET`
 * **URL Params:** `street=[string]` (e.g., `Lorem ipsum`)
 * **Success Response (200 OK):**
-    ```json
+```json
     {
         "data": [
             {
@@ -368,31 +384,19 @@ This platform transforms casual matches into a professional, seamless experience
                 "is_apartment": false,
                 "city_id": 2687,
                 "city_name": "Río Cuarto"
-            },
-            {
-                "id": 2,
-                "street_main": "Lorem ipsum",
-                "street_complement": "Lorem ipsum",
-                "street_number": "0000",
-                "apartment_number": "8",
-                "floor": "4",
-                "comment": "Main Home",
-                "is_apartment": true,
-                "city_id": 2687,
-                "city_name": "Río Cuarto"
             }
         ]
     }
     ```
 * **Error Response (400 Bad Request):**
-    ```json
+```json
     {
         "error": "ValidationError",
         "message": "The street name is required in the URL."
     }
     ```
 * **Error Response (404 Not Found):**
-    ```json
+```json
     {
         "error": "NotFound",
         "message": "Street not found"
@@ -400,11 +404,11 @@ This platform transforms casual matches into a professional, seamless experience
     ```
 
 #### 11. Get address by city
-* **URL:** `/ubication/address/city/<str:city_name>`
+* **URL:** `/ubication/address/city/<str:city_name>/`
 * **Method:** `GET`
 * **URL Params:** `city_name=[string]` (e.g., `Río Cuarto`)
 * **Success Response (200 OK):**
-    ```json
+```json
     {
         "data": [
             {
@@ -418,31 +422,19 @@ This platform transforms casual matches into a professional, seamless experience
                 "is_apartment": false,
                 "city_id": 2687,
                 "city_name": "Río Cuarto"
-            },
-            {
-                "id": 2,
-                "street_main": "Lorem ipsum",
-                "street_complement": "Lorem ipsum",
-                "street_number": "0000",
-                "apartment_number": "8",
-                "floor": "4",
-                "comment": "Main Home",
-                "is_apartment": true,
-                "city_id": 2687,
-                "city_name": "Río Cuarto"
             }
         ]
     }
     ```
 * **Error Response (400 Bad Request):**
-    ```json
+```json
     {
         "error": "ValidationError",
         "message": "The city name is required in the URL."
     }
     ```
 * **Error Response (404 Not Found):**
-    ```json
+```json
     {
         "error": "NotFound",
         "message": "City not found"
@@ -450,11 +442,11 @@ This platform transforms casual matches into a professional, seamless experience
     ```
 
 #### 12. Create an address
-* **URL:** `/ubication/address/create`
+* **URL:** `/ubication/address/create/`
 * **Method:** `POST`
 * **Headers:** `Content-Type: application/json`
 * **Request Body (JSON):**
-    ```json
+```json
     {
         "street_main": "Lorem",
         "street_complement": "Ipsum",
@@ -467,7 +459,7 @@ This platform transforms casual matches into a professional, seamless experience
     }
     ```
 * **Success Response (201 Created):**
-    ```json
+```json
     {
         "Message": "The address has been successfully created",
         "data": {
@@ -485,19 +477,19 @@ This platform transforms casual matches into a professional, seamless experience
     }
     ```
 * **Error Response (400 Bad Request):**
-    ```json
+```json
     {
         "Error": "Sensitive data is missing"
     }
     ```
 
 #### 13. Update an address
-* **URL:** `/ubication/address/update/<int:id>`
+* **URL:** `/ubication/address/update/<int:id>/`
 * **Method:** `PUT`
 * **URL Params:** `id=[integer]` (e.g., `2`)
 * **Headers:** `Content-Type: application/json`
 * **Request Body (JSON):**
-    ```json
+```json
     {
         "street_main": "Lore Lore",
         "street_complement": "Ipsum",
@@ -510,7 +502,7 @@ This platform transforms casual matches into a professional, seamless experience
     }
     ```
 * **Success Response (200 OK):**
-    ```json
+```json
     {
         "Message": "The address has been successfully updated",
         "data": {
@@ -528,13 +520,13 @@ This platform transforms casual matches into a professional, seamless experience
     }
     ```
 * **Error Response (400 Bad Request):**
-    ```json
+```json
     {
         "Error": "Sensitive data is missing"
     }
     ```
 * **Error Response (404 Not Found):**
-    ```json
+```json
     {
         "Error": "Address not found"
     }
@@ -548,7 +540,7 @@ This platform transforms casual matches into a professional, seamless experience
 * **URL:** `/person/genre/list/`
 * **Method:** `GET`
 * **Success Response (200 OK):**
-    ```json
+```json
     {
         "data": [
             {
@@ -558,16 +550,12 @@ This platform transforms casual matches into a professional, seamless experience
             {
                 "id": 2,
                 "name": "Female"
-            },
-            {
-                "id": 3,
-                "name": "Other"
             }
         ]
     }
     ```
 * **Error Response (404 Not Found):**
-    ```json
+```json
     {
         "error": "NotFound",
         "message": "Genres not found"
@@ -575,11 +563,11 @@ This platform transforms casual matches into a professional, seamless experience
     ```
 
 #### 15. Get genre by name
-* **URL:** `/person/genre/name/<str:name>`
+* **URL:** `/person/genre/name/<str:name>/`
 * **Method:** `GET`
 * **URL Params:** `name=[string]` (e.g., `Female`)
 * **Success Response (200 OK):**
-    ```json
+```json
     {
         "data": [
             {
@@ -590,14 +578,14 @@ This platform transforms casual matches into a professional, seamless experience
     }
     ```
 * **Error Response (400 Bad Request):**
-    ```json
+```json
     {
         "error": "ValidationError",
         "message": "The genre name is required in the URL."
     }
     ```
 * **Error Response (404 Not Found):**
-    ```json
+```json
     {
         "error": "NotFound",
         "message": "Genre not found"
@@ -608,7 +596,7 @@ This platform transforms casual matches into a professional, seamless experience
 * **URL:** `/person/document/type/list/`
 * **Method:** `GET`
 * **Success Response (200 OK):**
-    ```json
+```json
     {
         "data": [
             {
@@ -617,21 +605,13 @@ This platform transforms casual matches into a professional, seamless experience
             },
             {
                 "id": 2,
-                "name": "Passaport"
-            },
-            {
-                "id": 3,
-                "name": "CUIT"
-            },
-            {
-                "id": 4,
-                "name": "CUIL"
+                "name": "Passport"
             }
         ]
     }
     ```
 * **Error Response (404 Not Found):**
-    ```json
+```json
     {
         "error": "NotFound",
         "message": "Document Types not found"
@@ -639,32 +619,18 @@ This platform transforms casual matches into a professional, seamless experience
     ```
 
 #### 17. Get document type by name
-* **URL:** `/person/document/type/name/<str:name>`
+* **URL:** `/person/document/type/name/<str:name>/`
 * **Method:** `GET`
-* **URL Params:** `name=[string]` (e.g., `Female`)
+* **URL Params:** `name=[string]` (e.g., `DNI`)
 * **Success Response (200 OK):**
-    ```json
+```json
     {
         "data": [
             {
-                "id": 2,
-                "name": "Female"
+                "id": 1,
+                "name": "DNI"
             }
         ]
-    }
-    ```
-* **Error Response (400 Bad Request):**
-    ```json
-    {
-        "error": "ValidationError",
-        "message": "The genre name is required in the URL."
-    }
-    ```
-* **Error Response (404 Not Found):**
-    ```json
-    {
-        "error": "NotFound",
-        "message": "Genre not found"
     }
     ```
 
@@ -672,7 +638,7 @@ This platform transforms casual matches into a professional, seamless experience
 * **URL:** `/person/list/`
 * **Method:** `GET`
 * **Success Response (200 OK):**
-    ```json
+```json
     {
         "data": [
             {
@@ -692,11 +658,11 @@ This platform transforms casual matches into a professional, seamless experience
     ```
 
 #### 19. Get people by last name
-* **URL:** `/person/name/<str:last_name>`
+* **URL:** `/person/name/<str:last_name>/`
 * **Method:** `GET`
 * **URL Params:** `last_name=[string]` (e.g., `Doe`)
 * **Success Response (200 OK):**
-    ```json
+```json
     {
         "data": [
             {
@@ -714,20 +680,13 @@ This platform transforms casual matches into a professional, seamless experience
         ]
     }
     ```
-* **Error Response (404 Not Found):**
-    ```json
-    {
-        "error": "NotFound",
-        "message": "No people found with the specified last name"
-    }
-    ```
 
 #### 20. Create a person
 * **URL:** `/person/create/`
 * **Method:** `POST`
 * **Headers:** `Content-Type: application/json`
 * **Request Body (JSON):**
-    ```json
+```json
     {
         "first_name": "Jane",
         "last_name": "Smith",
@@ -740,78 +699,61 @@ This platform transforms casual matches into a professional, seamless experience
         "address_id": 2
     }
     ```
-* **Success Response (201 Created):**
-    ```json
+
+---
+
+#### 🔒 Users Endpoints
+
+##### 21. Trigger Password Reset Email
+* **URL:** `/email/reset/password/<str:username>/<str:email>/`
+* **Method:** `POST`
+* **URL Params:** `username=[string]`, `email=[string]`
+* **Success Response (200 OK):**
+```json
     {
-        "Message": "The person has been successfully created",
-        "data": {
-            "id": 2,
-            "first_name": "Jane",
-            "last_name": "Smith",
-            "document_number": "87654321",
-            "birth_date": "1992-10-10",
-            "phone": "5559876543",
-            "email": "janesmith@example.com",
-            "document_type_id": 1,
-            "genre_id": 2,
-            "address_id": 2
-        }
+        "message": "The email recover was successfully sent."
     }
     ```
 * **Error Response (400 Bad Request):**
-    ```json
+```json
     {
-        "Error": "Sensitive data is missing"
+        "error": "BadRequest",
+        "message": "We were unable to send the recovery email"
     }
     ```
 
-#### 21. Update a person
-* **URL:** `/person/update/<int:id>`
-* **Method:** `PUT`
-* **URL Params:** `id=[integer]` (e.g., `2`)
-* **Headers:** `Content-Type: application/json`
+##### 22. User Login (JWT Generation)
+* **URL:** `/login/`
+* **Method:** `POST`
 * **Request Body (JSON):**
-    ```json
+```json
     {
-        "first_name": "Jane",
-        "last_name": "Smith",
-        "document_number": "87654321",
-        "birth_date": "1992-10-10",
-        "phone": "5550001111",
-        "email": "jane.updated@example.com",
-        "document_type_id": 1,
-        "genre_id": 2,
-        "address_id": 2
+        "username": "thomas",
+        "password": "secure_password"
     }
     ```
 * **Success Response (200 OK):**
-    ```json
+```json
     {
-        "Message": "The person has been successfully updated",
+        "Message": "Welcome, user",
         "data": {
-            "id": 2,
-            "first_name": "Jane",
-            "last_name": "Smith",
-            "document_number": "87654321",
-            "birth_date": "1992-10-10",
-            "phone": "5550001111",
-            "email": "jane.updated@example.com",
-            "document_type_id": 1,
-            "genre_id": 2,
-            "address_id": 2
-        }
+            "id": 1,
+            "username": "thomas",
+            "is_active": true,
+            "person_id": 1
+        },
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
     }
     ```
-* **Error Response (400 Bad Request):**
-    ```json
+
+##### 23. Logical User Deactivation
+* **URL:** `/delete/<int:id>/`
+* **Method:** `PATCH`
+* **URL Params:** `id=[integer]` (e.g., `1`)
+* **Success Response (200 OK):**
+```json
     {
-        "Error": "Sensitive data is missing"
-    }
-    ```
-* **Error Response (404 Not Found):**
-    ```json
-    {
-        "Error": "Person not found"
+        "message": "The user was successfully deactivated."
     }
     ```
 
@@ -820,6 +762,7 @@ This platform transforms casual matches into a professional, seamless experience
 ### 🛠️ Tech Stack & Architecture
 
 * **Backend Framework**: Django & Django REST Framework (DRF)
+* **Authentication**: Simple JWT & Secure Token Generator (`secrets` module)
 * **Database**: PostgreSQL (Hosted on Neon Tech)
 * **Environment & Deployment**: Docker & Docker Compose
 
