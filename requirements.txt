@@ -23,3 +23,4 @@ pytest
 requests
 pytest-django
 python-dotenv
+Pillow

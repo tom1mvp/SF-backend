@@ -20,8 +20,6 @@ from ubication.serializers import (
 
 # View's Country
 class ListCountryView(APIView):
-    
-    
     def get(self, request):
         
         country = CountryServices.get_all_countries()
@@ -37,8 +35,6 @@ class ListCountryView(APIView):
         return Response({'data': serializer.data}, status=status.HTTP_200_OK)
 
 class CountryByNameView(APIView):
-    
-    
     def get(self, request, *args, **kwargs):
         country_name = str(kwargs.get('name'))
         
@@ -64,8 +60,6 @@ class CountryByNameView(APIView):
     
 
 class ListProvinceView(APIView):
-    
-    
     def get(self, request):
         provinces = ProvinceServices.get_all_provinces()
         
@@ -81,8 +75,6 @@ class ListProvinceView(APIView):
     
 
 class ProvinceByNameView(APIView):
-    
-    
     def get(self, request, *args, **kwargs):
         province_name = str(kwargs.get('name'))
         
@@ -108,8 +100,6 @@ class ProvinceByNameView(APIView):
     
 
 class ProvinceByCountryNameView(APIView):
-    
-    
     def get(self, request, *args, **kwargs):
         country_name = str(kwargs.get('country_name'))
         
@@ -135,8 +125,6 @@ class ProvinceByCountryNameView(APIView):
     
 
 class ListCityView(APIView):
-    
-    
     def get(self, request):
         cities = CityServices.get_all_cities()
         
@@ -152,8 +140,6 @@ class ListCityView(APIView):
     
     
 class CityByNameView(APIView):
-    
-    
     def get(self, request, *args, **kwargs):
         city_name = str(kwargs.get('name'))
         
@@ -179,8 +165,6 @@ class CityByNameView(APIView):
     
 
 class CityByProvinceNameView(APIView):
-    
-    
     def get(self, request, *args, **kwargs):
         province_name = str(kwargs.get('province_name'))
         
