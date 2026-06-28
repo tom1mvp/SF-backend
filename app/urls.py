@@ -21,5 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('ubication/', include('ubication.urls')),
     path('person/', include('people.urls')),
-    path('auth/',include('user.urls'))
+    path('auth/',include('user.urls')),
+    path('player/', include('player.urls'))
 ]

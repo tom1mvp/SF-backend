@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     # API apps (system modules)
     'ubication',
     'people',
-    'user'
+    'user',
+    'player'
 ]
 
 MIDDLEWARE = [
