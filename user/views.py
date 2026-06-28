@@ -214,7 +214,7 @@ class SendEmailReactivationUserView(APIView):
             return Response(
                 {
                     "error": "BadRequest",
-                    "message": "Sensitive data is missing"
+                    "message": "We were unable to send the recovery email"
                 }, status=status.HTTP_400_BAD_REQUEST)
         
         try:

@@ -10,6 +10,7 @@ from user.views import (
     UpdateUserView,
     DeleteUserView,
     RecoverUserView,
+    RecoverPasswordView,
     SendEmailPasswordResetView,
     SendEmailReactivationUserView
 )
@@ -57,12 +58,17 @@ urlpatterns = [
         name='recover-user-by-email'
     ),
     path(
-        'email/reset/password/<str:username>/<str:email>/',
+        'password/recover/<int:id>',
+        RecoverPasswordView.as_view(),
+        name='recover-password'
+    ),
+    path(
+        'email/reset/password/<str:username>/<str:email>',
         SendEmailPasswordResetView.as_view(),
         name='send-recover-email'
     ),
     path(
-        'email/reactivation/user/<str:username>/<str:email>/',
+        'email/reactivation/user/<str:username>/<str:email>',
         SendEmailReactivationUserView.as_view(),
         name='send-reactivation-email'
     )
