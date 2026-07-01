@@ -22,5 +22,6 @@ urlpatterns = [
     path('ubication/', include('ubication.urls')),
     path('person/', include('people.urls')),
     path('auth/',include('user.urls')),
-    path('player/', include('player.urls'))
+    path('player/', include('player.urls')),
+    path('team/', include('team.urls'))
 ]

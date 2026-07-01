@@ -49,7 +49,8 @@ INSTALLED_APPS = [
     'ubication',
     'people',
     'user',
-    'player'
+    'player',
+    'team'
 ]
 
 MIDDLEWARE = [

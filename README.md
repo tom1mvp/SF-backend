@@ -14,7 +14,8 @@ This platform transforms casual matches into a professional, seamless experience
 - **Ubication**: This module handles all operations related to geographic locations, including address, countries, provinces, and cities.
 - **People**: This module handles all operations related to managing personal identity records, including full names, contact info, and demographic details.
 - **Users**: This module manages authentication, user accounts, authorization levels (JWT Tokens), and independent email verification/reactivation workflows.
-• **Players & Stats**: This module handles all operations related to soccer players, managing their physical attributes, positioning, team associations, and comprehensive historical match performance analytics.
+- **Players & Stats**: This module handles all operations related to soccer players, managing their physical attributes, positioning, team associations, and comprehensive historical match performance analytics.
+- **Teams & Stats**: This module manages team profiles, structural rosters (player-team associations), and tracks collective performance metrics, including match outcomes, win/loss ratios, and historical goals analytics.
     
 ### ⚙️ Endpoints
 * **Ubication Module**:
@@ -62,18 +63,40 @@ This platform transforms casual matches into a professional, seamless experience
     | `POST` | `/auth/email/reset/password/<str:username>/<str:email>` | Triggers a secure, automated link to recover password using a unique token. | No |
     | `POST` | `/auth/email/reactivation/user/<str:username>/<str:email>` | Triggers a secure email containing an activation link to reactivate a user account. | No |
 
-• **Players & Stats Module**:
+* **Players & Stats Module**:
     | Method | Endpoint | Description | Auth Required |
     | :--- | :--- | :--- | :---: |
     | `GET` | `/player/list/` | Retrieves a complete list of all registered players with their user and personal details. | No |
-    | `GET` | `/player/username/<str:username>/` | Retrieves player detailed profile information matching the specified username. | No |
+    | `GET` | `/player/username/<str:username>` | Retrieves player detailed profile information matching the specified username. | No |
     | `POST` | `/player/create/` | Registers a new player profile linked to an existing system user ID. | No |
-    | `PUT` | `/player/update/<int:id>/` | Modifies physical and tactical data for an existing player profile matching the ID. | No |
+    | `PUT` | `/player/update/<int:id>` | Modifies physical and tactical data for an existing player profile matching the ID. | No |
     | `GET` | `/player/stat/list/` | Retrieves a global list of historical performance statistics for all players. | No |
-    | `GET` | `/player/stat/nickname/<str:nickname>/` | Retrieves performance metrics using the unique player nickname specified in the URL. | No |
-    | `GET` | `/player/stat/id/<int:id>/` | Retrieves performance metrics matching the specific player ID. | No |
+    | `GET` | `/player/stat/nickname/<str:nickname>` | Retrieves performance metrics using the unique player nickname specified in the URL. | No |
+    | `GET` | `/player/stat/id/<int:id>` | Retrieves performance metrics matching the specific player ID. | No |
     | `POST` | `/player/stat/create/` | Initializes a statistics tracker record for a specific player profile. | No |
-    | `PUT` | `/player/stat/update/<int:id>/` | Updates match history records (goals, cards, MVPs) for a given stat ID. | No |
+    | `PUT` | `/player/stat/update/<int:id>` | Updates match history records (goals, cards, MVPs) for a given stat ID. | No |
+
+* **Teams & Stats Module**:
+    | Method | Endpoint | Description | Auth Required |
+    | :--- | :--- | :--- | :---: |
+    | `GET` | `/team/list/` | Retrieves a complete list of all registered teams with their user details. | No |
+    | `GET` | `/team/name/<str:name>` | Retrieves detailed profile information for a team matching the specified name. | No |
+    | `GET` | `/team/id/<int:id>` | Retrieves detailed profile information for a team matching the specified ID. | No |
+    | `POST` | `/team/create/` | Creates a new team profile associated with the authenticated user. | No |
+    | `PUT` | `/team/update/<int:id>` | Updates an existing team profile based on the specified ID. | No |
+    | `GET` | `/team/player/list/` | comprehensive list of all registered team players and their associations. | No |
+    | `GET` | `/team/player/nickname/<str:nickname>` | Retrieves detailed profile information for a team player matching the specified nickname. | No |
+    | `GET` | `/team/name/player/<str:name>` | Retrieves a list of all team players belonging to the team with the specified name. | No |
+    | `GET` | `/team/id/player/<int:id>` | Retrieves a list of all team players belonging to the team with the specified ID. | No |
+    | `POST` | `/team/player/create/` | Creates a new team player profile, associating a specific player with a team. | No |
+    | `PUT` | `/team/player/update/<int:id>` | Updates an existing team player profile based on the specified ID. | No |
+    | `PATCH` | `/team/player/delete/<int:id>` | Performs a soft delete on an existing team player profile by deactivating it based on the specified ID. | No |
+    | `GET` | `/team/stat/list/` | Retrieves a comprehensive list of performance statistics and match analytics for all teams. | No |
+    | `GET` | `/team/stat/<int:id>` | Retrieves detailed performance statistics and analytics for a team matching the specified ID. | No |
+    | `GET` | `/team/name/stat/<str:name>` | Retrieves detailed performance statistics and analytics for a team matching the specified name. | No |
+    | `POST` | `/team/stat/create/` | create a performance statistics profile for a specific team. | No |
+    | `PUT` | `/team/stat/update/<int:id>` | Updates the existing performance statistics and analytics for a team based on the specified ID. | No |
+
 
 ### 📄 Detailed Specifications
 
@@ -94,14 +117,14 @@ This platform transforms casual matches into a professional, seamless experience
             }
         ]
     }
-    ```
+```
 * **Error Response (404 Not Found):**
 ```json
     {
         "error": "NotFound",
         "message": "Country not found"
     }
-    ```
+```
 
 ##### 2. Get country by name
 * **URL:** `/ubication/country/name/<str:name>/`
@@ -117,21 +140,21 @@ This platform transforms casual matches into a professional, seamless experience
             }
         ]
     }
-    ```
+```
 * **Error Response (400 Bad Request):**
 ```json
     {
         "error": "ValidationError",
         "message": "The country name is required in the URL."
     }
-    ```
+```
 * **Error Response (404 Not Found):**
 ```json
     {
         "error": "NotFound",
         "message": "Country not found"
     }
-    ```
+```
 
 ---
 
@@ -164,14 +187,14 @@ This platform transforms casual matches into a professional, seamless experience
             }
         ]
     }
-    ```
+```
 * **Error Response (404 Not Found):**
 ```json
     {
         "error": "NotFound",
         "message": "Provinces not found"
     }
-    ```
+```
             
 ##### 4. Get province by name
 * **URL:** `/ubication/province/name/<str:name>/`
@@ -189,21 +212,21 @@ This platform transforms casual matches into a professional, seamless experience
             }
         ]
     }
-    ```
+```
 * **Error Response (400 Bad Request):**
 ```json
     {
         "error": "ValidationError",
         "message": "The province name is required in the URL."
     }
-    ```
+```
 * **Error Response (404 Not Found):**
 ```json
     {
         "error": "NotFound",
         "message": "province not found"
     }
-    ```
+```
          
 ##### 5. Get provinces by country name
 * **URL:** `/ubication/province/country/<str:country_name>/`
@@ -227,7 +250,7 @@ This platform transforms casual matches into a professional, seamless experience
             }
         ]
     }
-    ```
+```
 
 ---
 
@@ -254,14 +277,14 @@ This platform transforms casual matches into a professional, seamless experience
             }
         ]
     }
-    ```
+```
 * **Error Response (404 Not Found):**
 ```json
     {
         "error": "NotFound",
         "message": "City not found"
     }
-    ```
+```
 
 ##### 7. Get city by name
 * **URL:** `/ubication/city/name/<str:name>/`
@@ -279,7 +302,7 @@ This platform transforms casual matches into a professional, seamless experience
             }
         ]
     }
-    ```
+```
 * **Error Response (400 Bad Request):**
 ```json
     {
@@ -293,7 +316,7 @@ This platform transforms casual matches into a professional, seamless experience
         "error": "NotFound",
         "message": "City not found"
     }
-    ```
+```
 
 ##### 8. Get cities by province name
 * **URL:** `/ubication/city/province/<str:province_name>/`
@@ -317,7 +340,7 @@ This platform transforms casual matches into a professional, seamless experience
             }
         ]
     }
-    ```
+```
 * **Error Response (400 Bad Request):**
 ```json
     {
@@ -331,7 +354,7 @@ This platform transforms casual matches into a professional, seamless experience
         "error": "NotFound",
         "message": "Province not found"
     }
-    ```
+```
 
 ---
 
@@ -370,14 +393,14 @@ This platform transforms casual matches into a professional, seamless experience
             }
         ]
     }
-    ```
+```
 * **Error Response (404 Not Found):**
 ```json
     {
         "error": "NotFound",
         "message": "Address not found"
     }
-    ```
+```
 
 #### 10. Get address by street
 * **URL:** `/ubication/address/street/<str:street>/`
@@ -401,7 +424,7 @@ This platform transforms casual matches into a professional, seamless experience
             }
         ]
     }
-    ```
+```
 * **Error Response (400 Bad Request):**
 ```json
     {
@@ -415,7 +438,7 @@ This platform transforms casual matches into a professional, seamless experience
         "error": "NotFound",
         "message": "Street not found"
     }
-    ```
+```
 
 #### 11. Get address by city
 * **URL:** `/ubication/address/city/<str:city_name>/`
@@ -439,7 +462,7 @@ This platform transforms casual matches into a professional, seamless experience
             }
         ]
     }
-    ```
+```
 * **Error Response (400 Bad Request):**
 ```json
     {
@@ -453,7 +476,7 @@ This platform transforms casual matches into a professional, seamless experience
         "error": "NotFound",
         "message": "City not found"
     }
-    ```
+```
 
 #### 12. Create an address
 * **URL:** `/ubication/address/create/`
@@ -471,7 +494,7 @@ This platform transforms casual matches into a professional, seamless experience
         "is_apartment": false,
         "city_id": 2687
     }
-    ```
+```
 * **Success Response (201 Created):**
 ```json
     {
@@ -489,13 +512,13 @@ This platform transforms casual matches into a professional, seamless experience
             "city_name": "Río Cuarto"
         }
     }
-    ```
+```
 * **Error Response (400 Bad Request):**
 ```json
     {
         "Error": "Sensitive data is missing"
     }
-    ```
+```
 
 #### 13. Update an address
 * **URL:** `/ubication/address/update/<int:id>/`
@@ -514,7 +537,7 @@ This platform transforms casual matches into a professional, seamless experience
         "is_apartment": true,
         "city_id": 2687
     }
-    ```
+```
 * **Success Response (200 OK):**
 ```json
     {
@@ -532,19 +555,19 @@ This platform transforms casual matches into a professional, seamless experience
             "city_name": "Río Cuarto"
         }
     }
-    ```
+```
 * **Error Response (400 Bad Request):**
 ```json
     {
         "Error": "Sensitive data is missing"
     }
-    ```
+```
 * **Error Response (404 Not Found):**
 ```json
     {
         "Error": "Address not found"
     }
-    ```
+```
 
 ---
 
@@ -571,14 +594,14 @@ This platform transforms casual matches into a professional, seamless experience
             }
         ]
     }
-    ```
+```
 * **Error Response (404 Not Found):**
 ```json
     {
         "error": "NotFound",
         "message": "Genres not found"
     }
-    ```
+```
 
 #### 15. Get genre by name
 * **URL:** `/person/genre/name/<str:name>/`
@@ -594,21 +617,21 @@ This platform transforms casual matches into a professional, seamless experience
             }
         ]
     }
-    ```
+```
 * **Error Response (400 Bad Request):**
 ```json
     {
         "error": "ValidationError",
         "message": "The genre name is required in the URL."
     }
-    ```
+```
 * **Error Response (404 Not Found):**
 ```json
     {
         "error": "NotFound",
         "message": "Genre not found"
     }
-    ```
+```
 
 ##### 16. Get all document type
 * **URL:** `/person/document/type/list/`
@@ -627,14 +650,14 @@ This platform transforms casual matches into a professional, seamless experience
             }
         ]
     }
-    ```
+```
 * **Error Response (404 Not Found):**
 ```json
     {
         "error": "NotFound",
         "message": "Document Types not found"
     }
-    ```
+```
 
 #### 17. Get document type by name
 * **URL:** `/person/document/type/name/<str:name>/`
@@ -650,20 +673,21 @@ This platform transforms casual matches into a professional, seamless experience
             }
         ]
     }
-    ```
+```
 * **Error Response (400 Bad Request):**
 ```json
     {
         "error": "ValidationError",
         "message": "The document type name is required in the URL."
     }
-    ```
+```
 * **Error Response (404 Not Found):**
 ```json
     {
         "error": "NotFound",
         "message": "Document type not found"
     }
+```
 
 #### 18. Get all people
 * **URL:** `/person/list/`
@@ -686,7 +710,7 @@ This platform transforms casual matches into a professional, seamless experience
             }
         ]
     }
-    ```
+```
 * **Error Response (404 Not Found):**
 ```json
     {
@@ -717,20 +741,21 @@ This platform transforms casual matches into a professional, seamless experience
             }
         ]
     }
-    ```
+```
 * **Error Response (400 Bad Request):**
 ```json
     {
         "error": "ValidationError",
         "message": "The last name is required in the URL."
     }
-    ```
+```
 * **Error Response (404 Not Found):**
 ```json
     {
         "error": "NotFound",
         "message": "Last name not found"
     }
+```
 
 #### 20. Create a person
 * **URL:** `/person/create/`
@@ -749,7 +774,7 @@ This platform transforms casual matches into a professional, seamless experience
         "genre_id": 2,
         "address_id": 2
     }
-    ```
+```
 * **Success Response (200 OK):**
 ```json
     {
@@ -1522,7 +1547,7 @@ This platform transforms casual matches into a professional, seamless experience
 ```json
     {
         "message": "The player stat has been updated successfully.",
-        "data": [
+        "data": {
             "id": 5,
             "player_id": 1,
             "nickname": "JoeDo",
@@ -1532,7 +1557,693 @@ This platform transforms casual matches into a professional, seamless experience
             "yellow_cards": 0,
             "red_cards": 0,
             "total_mvps": 0
+        }
+    }
+```
+* **Error Response (400 Bad Request):**
+```json
+    {
+        "Error": "Sensitive data is missing"
+    }
+```
+
+### 🛡️ Team Endpoints
+
+#### 41. Get All teams
+* **URL:** `/team/list/`
+* **Method:** `GET`
+* **Success Response (200 OK):**
+```json
+    {
+        "data": [
+            {
+                "id": 1,
+                "user_id": 3,
+                "first_name": "John",
+                "last_name": "Doe",
+                "profile_picture": null,
+                "logo": "https://example.com/media/logos/team-alpha.png",
+                "name": "Team Alpha",
+                "created_at": "2026-06-30T13:42:50.299505Z",
+                "updated_at": "2026-06-30T13:42:50.300333Z"
+            },
+            {
+                "id": 2,
+                "user_id": 4,
+                "first_name": "Jane",
+                "last_name": "Doe",
+                "profile_picture": null,
+                "logo": null,
+                "name": "Team Beta",
+                "created_at": "2026-06-30T13:46:50.850530Z",
+                "updated_at": "2026-06-30T13:46:50.850571Z"
+            },
+            {
+                "id": 3,
+                "user_id": 2,
+                "first_name": "Alex",
+                "last_name": "Smith",
+                "profile_picture": null,
+                "logo": "https://example.com/media/logos/team-gamma.png",
+                "name": "Team Gamma",
+                "created_at": "2026-06-30T13:49:09.599331Z",
+                "updated_at": "2026-06-30T13:49:09.599395Z"
+            }
         ]
+    }
+```
+* **Error Response (404 Not Found):**
+```json
+    {
+        "error": "NotFound",
+        "message": "Teams not found"
+    }
+```
+
+#### 42. Get team by name
+* **URL:** `/team/name/<str:name>`
+* **Method:** `GET`
+* **URL Params:** `name=[string]` (e.g., `Team Alpha`)
+* **Success Response (200 OK):**
+```json
+    {
+        "data": [
+            {
+                "id": 1,
+                "user_id": 3,
+                "first_name": "John",
+                "last_name": "Doe",
+                "profile_picture": null,
+                "logo": "https://example.com/media/logos/team-alpha.png",
+                "name": "Team Alpha",
+                "created_at": "2026-06-30T13:42:50.299505Z",
+                "updated_at": "2026-06-30T13:42:50.300333Z"
+            }
+        ]
+    }
+```
+* **Error Response (400 Bad Request):**
+```json
+    {
+        "error": "ValidationError",
+        "message": "The name team is required in the URL."
+    }
+```
+* **Error Response (404 Not Found):**
+```json
+    {
+        "error": "NotFound",
+        "message": "Team not found"
+    }
+```
+
+#### 43. Get team by ID
+* **URL:** `/team/id/<int:id>`
+* **Method:** `GET`
+* **URL Params:** `id=[integer]` (e.g., `3`)
+* **Success Response (200 OK):**
+```json
+    {
+        "data": [
+            {
+                "id": 3,
+                "user_id": 2,
+                "first_name": "Alex",
+                "last_name": "Smith",
+                "profile_picture": null,
+                "logo": "https://example.com/media/logos/team-gamma.png",
+                "name": "Team Gamma",
+                "created_at": "2026-06-30T13:49:09.599331Z",
+                "updated_at": "2026-06-30T13:49:09.599395Z"
+            }
+        ]
+    }
+```
+* **Error Response (400 Bad Request):**
+```json
+    {
+        "error": "ValidationError",
+        "message": "The team ID is required in the URL."
+    }
+```
+* **Error Response (404 Not Found):**
+```json
+    {
+        "error": "NotFound",
+        "message": "Team not found"
+    }
+```
+
+#### 44. Create team
+* **URL:** `/team/create/`
+* **Method:** `POST`
+* **Headers:** `Content-Type: application/json`
+* **Request Body (JSON):**
+```json
+    {
+        "name": "Team Alpha",
+        "logo": "https://example.com/media/logos/team-alpha.png",
+        "user_id": 3
+    }
+```
+* **Success Response (200 OK):**
+```json
+    {
+        "message": "The team has been created successfully.",
+        "data": {
+            "id": 1,
+            "user_id": 3,
+            "first_name": "John",
+            "last_name": "Doe",
+            "profile_picture": null,
+            "logo": "https://example.com/media/logos/team-alpha.png",
+            "name": "Team Alpha",
+            "created_at": "2026-06-30T13:42:50.299505Z",
+            "updated_at": "2026-06-30T13:42:50.300333Z"
+        }
+    }
+```
+* **Error Response (400 Bad Request):**
+```json
+    {
+        "Error": "Sensitive data is missing"
+    }
+```
+
+#### 45. Update team
+* **URL:** `/team/update/<int:id>`
+* **Method:** `PUT`
+* **URL Params:** `id=[integer]` (e.g., `1`)
+* **Headers:** `Content-Type: application/json`
+* **Request Body (JSON):**
+```json
+    {
+        "id": 1,
+        "user_id": 3,
+        "first_name": "John",
+        "last_name": "Doe",
+        "profile_picture": null,
+        "logo": "https://example.com/media/logos/team-alpha.png",
+        "name": "Team AlphA",
+        "created_at": "2026-06-30T13:42:50.299505Z",
+        "updated_at": "2026-06-30T13:42:50.300333Z"
+    }
+```
+* **Success Response (200 OK):**
+```json
+    {
+        "message": "The team has been updated successfully.",
+        "data": {
+            "id": 1,
+            "user_id": 3,
+            "first_name": "John",
+            "last_name": "Doe",
+            "profile_picture": null,
+            "logo": "https://example.com/media/logos/team-alpha.png",
+            "name": "Team AlphA",
+            "created_at": "2026-06-30T13:42:50.299505Z",
+            "updated_at": "2026-06-30T13:42:50.300333Z"
+        }
+    }
+```
+* **Error Response (400 Bad Request):**
+```json
+    {
+        "Error": "Sensitive data is missing"
+    }
+```
+
+### 🎽 Team player Endpoints
+
+#### 46. Get all team players
+* **URL:** `/team/player/list/`
+* **Method:** `GET`
+* **Success Response (200 OK):**
+```json
+    {
+        "data": [
+            {
+                "id": 1,
+                "player_id": 1,
+                "nickname": "Jane",
+                "profile_picture": null,
+                "team_id": 3,
+                "team_name": "Team Gamma"
+            },
+            {
+                "id": 2,
+                "player_id": 4,
+                "nickname": "Alice",
+                "profile_picture": null,
+                "team_id": 3,
+                "team_name": "Team Gamma"
+            },
+            {
+                "id": 3,
+                "player_id": 5,
+                "nickname": "Bob",
+                "profile_picture": null,
+                "team_id": 3,
+                "team_name": "Team Gamma"
+            },
+            {
+                "id": 4,
+                "player_id": 3,
+                "nickname": "Charlie",
+                "profile_picture": null,
+                "team_id": 2,
+                "team_name": "Team Beta"
+            },
+            {
+                "id": 5,
+                "player_id": 2,
+                "nickname": "John",
+                "profile_picture": null,
+                "team_id": 1,
+                "team_name": "Team Alpha"
+            }
+        ]
+    }
+```
+* **Error Response (404 Not Found):**
+```json
+    {
+        "error": "NotFound",
+        "message": "Team players not found"
+    }
+```
+
+#### 47. Get team by name
+* **URL:** `/team/player/nickname/<str:nickname>`
+* **Method:** `GET`
+* **URL Params:** `nickname=[string]` (e.g., `John`)
+* **Success Response (200 OK):**
+```json
+    {
+        "data": [
+            {
+                "id": 5,
+                "player_id": 2,
+                "nickname": "John",
+                "profile_picture": null,
+                "team_id": 1,
+                "team_name": "Team Alpha"
+            }
+        ]
+    }
+```
+* **Error Response (400 Bad Request):**
+```json
+    {
+        "error": "ValidationError",
+        "message": "The nickname is required in the URL."
+    }
+```
+* **Error Response (404 Not Found):**
+```json
+    {
+        "error": "NotFound",
+        "message": "Player not found"
+    }
+```
+
+#### 48. Get team by name
+* **URL:** `/team/name/player/<str:name>`
+* **Method:** `GET`
+* **URL Params:** `name=[string]` (e.g., `Team Gamma`)
+* **Success Response (200 OK):**
+```json
+    {
+        "data": [
+            {
+                "id": 1,
+                "player_id": 1,
+                "nickname": "Jane",
+                "profile_picture": null,
+                "team_id": 3,
+                "team_name": "Team Gamma"
+            },
+            {
+                "id": 2,
+                "player_id": 4,
+                "nickname": "Alice",
+                "profile_picture": null,
+                "team_id": 3,
+                "team_name": "Team Gamma"
+            },
+            {
+                "id": 3,
+                "player_id": 5,
+                "nickname": "Bob",
+                "profile_picture": null,
+                "team_id": 3,
+                "team_name": "Team Gamma"
+            }
+        ]
+    }
+```
+* **Error Response (400 Bad Request):**
+```json
+    {
+        "error": "ValidationError",
+        "message": "The name is required in the URL."
+    }
+```
+* **Error Response (404 Not Found):**
+```json
+    {
+        "error": "NotFound",
+        "message": "Team not found"
+    }
+```
+
+#### 49. Get team by ID
+* **URL:** `/team/id/player/<int:id>`
+* **Method:** `GET`
+* **URL Params:** `id=[integer]` (e.g., `3`)
+* **Success Response (200 OK):**
+```json
+    {
+        "data": [
+            {
+                "id": 3,
+                "player_id": 5,
+                "nickname": "Bob",
+                "profile_picture": null,
+                "team_id": 3,
+                "team_name": "Team Gamma"
+            }
+        ]
+    }
+```
+* **Error Response (400 Bad Request):**
+```json
+    {
+        "error": "ValidationError",
+        "message": "The team ID is required in the URL."
+    }
+```
+* **Error Response (404 Not Found):**
+```json
+    {
+        "error": "NotFound",
+        "message": "Team not found"
+    }
+```
+
+#### 50. Create team player
+* **URL:** `/team/player/create/`
+* **Method:** `POST`
+* **Headers:** `Content-Type: application/json`
+* **Request Body (JSON):**
+```json
+    {
+        "player_id": 1,
+        "team_id": 3,
+        "is_active": true
+    }
+```
+* **Success Response (200 OK):**
+```json
+    {
+        "message": "The team player has been created successfully.",
+        "data": {
+            "id": 3,
+            "player_id": 1,
+            "nickname": "Jane",
+            "profile_picture": null,
+            "team_id": 3,
+            "team_name": "Team Gamma"
+        }
+    }
+```
+* **Error Response (400 Bad Request):**
+```json
+    {
+        "Error": "Sensitive data is missing"
+    }
+```
+
+
+#### 51. Update Team Player
+* **URL:** `/team/player/update/<int:id>`
+* **Method:** `PUT`
+* **URL Params:** `id=[integer]` (e.g., `1`)
+* **Headers:** `Content-Type: application/json`
+* **Request Body (JSON):**
+```json
+    {
+        "player_id": 1,
+        "team_id": 2,
+        "is_active": true
+    }
+```
+* **Success Response (200 OK):**
+```json
+
+    {
+        "message": "The team stat has been updated successfully.",
+        "data": {
+            "id": 3,
+            "player_id": 1,
+            "nickname": "Jane",
+            "profile_picture": null,
+            "team_id": 2,
+            "team_name": "Team Beta"
+        }
+    }
+```
+* **Error Response (400 Bad Request):**
+```json
+    {
+        "Error": "Sensitive data is missing"
+    }
+```
+
+#### 52. Delete team player
+* **URL:** `/team/player/delete/<int:id>`
+* **Method:** `PATCH`
+* **URL Params:** `id=[integer]` (e.g., `2`)
+* **Success Response (200 OK):**
+```json
+    {
+        "Message": "The team player has been successfully deactivated."
+    }
+```
+
+### 📊 Team Stat Endpoint
+
+#### 53. Get all team stats
+* **URL:** `/team/stat/list/`
+* **Method:** `GET`
+* **Success Response (200 OK):**
+```json
+    {
+        "data": [
+            {
+                "id": 1,
+                "team_id": 1,
+                "team_name": "Team Alpha",
+                "matches_played": 3,
+                "match_wins": 2,
+                "match_ties": 1,
+                "match_losses": 0,
+                "goals_for": 5,
+                "goals_against": 2
+            },
+            {
+                "id": 2,
+                "team_id": 2,
+                "team_name": "Team Beta",
+                "matches_played": 5,
+                "match_wins": 3,
+                "match_ties": 0,
+                "match_losses": 2,
+                "goals_for": 10,
+                "goals_against": 5
+            },
+            {
+                "id": 3,
+                "team_id": 3,
+                "team_name": "Team Gamma",
+                "matches_played": 10,
+                "match_wins": 7,
+                "match_ties": 2,
+                "match_losses": 1,
+                "goals_for": 12,
+                "goals_against": 5
+            }
+        ]
+    }
+```
+* **Error Response (404 Not Found):**
+```json
+    {
+        "error": "NotFound",
+        "message": "Team stat not found"
+    }
+```
+
+#### 54. Get team stat by team ID
+* **URL:** `/team/stat/<int:id>`
+* **Method:** `GET`
+* **URL Params:** `id=[integer]` (e.g., `3`)
+* **Success Response (200 OK):**
+```json
+    {
+        "data": [
+            {
+                "id": 3,
+                "team_id": 3,
+                "team_name": "Team Gamma",
+                "matches_played": 10,
+                "match_wins": 7,
+                "match_ties": 2,
+                "match_losses": 1,
+                "goals_for": 12,
+                "goals_against": 5
+            }
+        ]
+    }
+```
+* **Error Response (400 Bad Request):**
+```json
+    {
+        "error": "ValidationError",
+        "message": "The team ID is required in the URL."
+    }
+```
+* **Error Response (404 Not Found):**
+```json
+    {
+        "error": "NotFound",
+        "message": "Team not found"
+    }
+```
+
+#### 55. Get team stat by team name
+* **URL:** `/team/name/stat/<str:name>`
+* **Method:** `GET`
+* **URL Params:** `name=[string]` (e.g., `Team Alpha`)
+* **Success Response (200 OK):**
+```json
+    {
+        "data": [
+            {
+                "id": 1,
+                "team_id": 1,
+                "team_name": "Team Alpha",
+                "matches_played": 3,
+                "match_wins": 2,
+                "match_ties": 1,
+                "match_losses": 0,
+                "goals_for": 5,
+                "goals_against": 2
+            }
+        ]
+    }
+```
+* **Error Response (400 Bad Request):**
+```json
+    {
+        "error": "ValidationError",
+        "message": "The team name is required in the URL."
+    }
+```
+* **Error Response (404 Not Found):**
+```json
+    {
+        "error": "NotFound",
+        "message": "Team not found"
+    }
+```
+
+#### 55. Create team stat
+* **URL:** `/team/stat/create/`
+* **Method:** `POST`
+* **Headers:** `Content-Type: application/json`
+* **Request Body (JSON):**
+```json
+    {
+        "matches_played": 3,
+        "match_wins": 2,
+        "match_ties": 1,
+        "match_losses": 0,
+        "goals_for": 5,
+        "goals_against": 2,
+        "team_id": 1
+    }
+```
+* **Success Response (200 OK):**
+```json
+    {
+        "message": "The team stat has been created successfully.",
+        "data": {
+            "id": 1,
+            "team_id": 1,
+            "team_name": "Team Alpha",
+            "matches_played": 3,
+            "match_wins": 2,
+            "match_ties": 1,
+            "match_losses": 0,
+            "goals_for": 5,
+            "goals_against": 2
+        }
+}
+```
+* **Error Response (400 Bad Request):**
+```json
+    {
+        "Error": "Sensitive data is missing"
+    }
+```
+
+#### 56. Update team stat
+* **URL:** `/team/stat/update/<int:id>`
+* **Method:** `PUT`
+* **URL Params:** `id=[integer]` (e.g., `1`)
+* **Headers:** `Content-Type: application/json`
+* **Request Body (JSON):**
+```json
+    {
+        "matches_played": 10,
+        "match_wins": 7,
+        "match_ties": 2,
+        "match_losses": 1,
+        "goals_for": 12,
+        "goals_against": 5,
+        "team_id": 3
+    }
+```
+* **Success Response (200 OK):**
+```json
+
+    {
+
+        "message": "The team stat has been updated successfully.",
+
+        "data": {
+
+            "id": 3,
+
+            "team_id": 3,
+
+            "team_name": "Team Gamma",
+
+            "matches_played": 10,
+
+            "match_wins": 7,
+
+            "match_ties": 2,
+
+            "match_losses": 1,
+
+            "goals_for": 12,
+
+            "goals_against": 5
+
+        }
+
     }
 ```
 * **Error Response (400 Bad Request):**
